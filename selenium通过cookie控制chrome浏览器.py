@@ -3,93 +3,111 @@ from selenium.webdriver.common.by import By
 import time
 from selenium.webdriver.chrome.options import Options
 import json
+import os
+import requests
 # selenium语法全部改变，需重新查找资料
 
-#浏览器初始化
-def browser_initial():
-   browser = webdriver.Chrome()
-   #访问网站
-   url = 'https://weibo.com/login.php'
-   browser.get(url)
-   # 60s时间用来登录的
-   time.sleep(30)
+driver = webdriver.Chrome()
+
+#浏览器初始化,打开微博登录页面
+def init_browser():
+   driver.maximize_window()
+   driver.get('https://weibo.com/login.php')
+   return driver
+
+
+# # 读取cookies,登录微博
+# def login_weibo():
+#    #打开微博页面
+#    init_browser()
+#    cookies = read_cookies()
+#    for cookie in cookies:
+#       driver.add_cookie(cookie)
+#    time.sleep(10)
+#    driver.refresh()
+#    time.sleep(1000)
    
 
-   dictCookie = browser.get_cookies() #获取list的cookies
-   jsonCookie = json.dumps(dictCookie) #转换成json格式
+
+def get_cookies():
+   #访问网站
+   url = 'https://weibo.com/login.php'
+   driver.get(url)
+   # 60s时间用来登录的
+   time.sleep(30)
+   Cookies = driver.get_cookies() #获取list的cookies
+   jsonCookie = json.dumps(Cookies) #转换成json格式
    print(jsonCookie,'cookies')
    with open('cookies.txt','w') as fp:
     fp.write(jsonCookie)
-
-   print("已经获取到cookie")
-
-     # 退出微博并清空cookies
-   browser.delete_all_cookies()
-   print("已清空cookies")
-   browser.quit()
-   return browser
-
-browser = webdriver.Chrome()
-def log_cookie(browser):
-   #访问网站
-  url = 'https://weibo.com/login.php'
-  browser.get(url)
-  with open('cookies.txt','r',encoding='utf-8') as fp:
-    cookies = json.load(fp)
-    print(cookies)
-
-#往浏览器里添加cookies
-  for cookie in cookies:
-        print(cookie,'我是cookie')
-        browser.add_cookie(cookie)
-  return browser 
-
-browser = browser_initial()
-log_cookie(browser)
+   print("cookies已重新写入")
 
 
+def read_cookies():
+    #检查文件是否存在
+    files = os.path.exists('./cookies.txt')
+    if files:
+      with open('cookies.txt','r',encoding='utf-8') as fp:
+        Cookies = json.load(fp)
+        print(Cookies,'cookies已读取')
+      cookies = []
+      for cookie in Cookies:
+          print(cookie,'我是cookie')
+          cookie_dict = {
+          'domain':'.weibo.com',
+          'name':cookie.get("name"),
+          'value':cookie.get("value"),
+          'expires':'',
+          'path':'/',
+          'httpOnly':False,
+          'HostOnly':False,
+          'Secure':False
+        }
+          cookies.append(cookie_dict)
+      return cookies
+    else:
+      return False
+def check_cookie():
+   cookies = read_cookies()
+   s = requests.Session()
+   for cookie in cookies:
+      s.cookies.set(cookie['name'],cookie['value'])
+   response = s.get('https://weibo.com/u/6239620007')
+   response.encoding = response.apparent_encoding
+   html_t = response.text
+   print(html_t,'我是html_t')
+   #检查页面是否包含微博用户名
+   if 'hangduduS' in html_t:
+      print('登录成功')
+      return True
+   else:
+      print('登录失败')
+      return False
 
 
-# #获取网页源码
-# content = driver.page_source
-# time.sleep(5)
-# #输入账号
-# zhanghao = driver.find_element(By.XPATH,'//*[@id="loginname"]')
-# zhanghao.send_keys('15551359775')
-# time.sleep(1)
+if __name__ == '__main__':
+   #查看本地是否有cookie
+   cookies = read_cookies()
+   if cookies:
+      #检测cookies的有效性
+      res = check_cookie()
+      #如果cookie无效
+      if res == False:
+         #扫码登录微博
+         driver = init_browser()
+         #获取cookie
+         get_cookies()
+      else:
+         print('cookie有效')
+   else:
+      #扫码登录微博
+      driver = init_browser()
+      #获取cookie
+      get_cookies()
 
-# #输入密码
-# password = driver.find_element(By.XPATH,'//*[@id="pl_login_form"]/div/div[3]/div[2]/div/input')
-# password.send_keys('hangdudu')
-
-# #点击登录
-# login= driver.find_element(By.XPATH,'//*[@id="pl_login_form"]/div/div[3]/div[6]/a')
-# login.click()
-# time.sleep(6)
-
-# dictCookie = driver.get_cookies() #获取list的cookies
-# jsonCookie = json.dumps(dictCookie) #转换成json格式
-# print(jsonCookie,'cookies')
-# with open('cookies.txt','w') as fp:
-#  fp.write(jsonCookie)
-
-# #点击验证码输入框
-# code = driver.find_element(By.XPATH,'//*[@id="pl_login_form"]/div/div[3]/div[3]/div/input')
-
-# codeImg = driver.find_element(By.XPATH,'//*[@id="pl_login_form"]/div/div[3]/div[3]/a/img')
-# print(codeImg.get_attribute("src"))
+# login_weibo()
 
 
-# time.sleep(5)
-# #手动输入验证码的时间
-           
-
-# login.click()
-
-
-# 打印网页源码
-# print(content,'我是网页源码')
-time.sleep(1000)
 
 
 
