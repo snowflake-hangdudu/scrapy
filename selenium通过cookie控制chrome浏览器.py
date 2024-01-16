@@ -13,6 +13,8 @@ def browser_initial():
    browser.get(url)
    # 60s时间用来登录的
    time.sleep(30)
+   
+
    dictCookie = browser.get_cookies() #获取list的cookies
    jsonCookie = json.dumps(dictCookie) #转换成json格式
    print(jsonCookie,'cookies')
