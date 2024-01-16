@@ -1,0 +1,13 @@
+# MySQL数据库的主机、端口、用户名、密码、数据库名称和编码
+MYSQL_HOST = '127.0.0.1'
+MYSQL_PORT = 3306
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = 'hangdudu'
+MYSQL_DBNAME = 'hangdudu'
+MYSQL_CHARSET = 'utf8'
+
+
+# Redis数据库的主机、端口和数据库编号
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = 6379
+REDIS_DB = 0
