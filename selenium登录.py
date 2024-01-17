@@ -38,13 +38,43 @@ code = driver.find_element(By.XPATH,'//*[@id="pl_login_form"]/div/div[3]/div[3]/
 
 codeImg = driver.find_element(By.XPATH,'//*[@id="pl_login_form"]/div/div[3]/div[3]/a/img')
 print(codeImg.get_attribute("src"))
+#第一种方法,打开图片,手动输入
+imgcode = input('请输入验证码:')
+code.send_keys(imgcode)
 
+#第二种办法，使用超级鹰自动解码
+# import chaojiying
+# # 1. 实例化
+# cj = chaojiying.Chaojiying_Client('hangdudu', 'hangdudu', '957120')  #这个看chaojiying.py文件
+# # 2. 调用识别方法
+# im = open('a.jpg', 'rb').read()    #使用时注意路径
+# print(cj.PostPic(im, 1902)['pic_str'])
 
 time.sleep(5)
 #手动输入验证码的时间
-           
 
+#再次点击登录
 login.click()
+
+#点击短信按钮验证
+
+time.sleep(5)
+sms = driver.find_element(By.XPATH,'//*[@id="messageCheck"]')
+sms.click()
+
+#点击接收验证码验证
+
+time.sleep(5)
+receive = driver.find_element(By.XPATH,'//*[@id="message_sms_login"]')
+receive.click()
+
+
+
+#第一种办法，手动输入短信验证码
+time.sleep(10)
+code = input('请输入验证码:')
+
+
 
 
 # 打印网页源码
