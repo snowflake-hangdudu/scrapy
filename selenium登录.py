@@ -4,15 +4,20 @@ import time
 from selenium.webdriver.chrome.options import Options
 import json
 
-
+print('运行了吗')
 driver = webdriver.Chrome()
    #访问网站
 url = 'https://weibo.com/login.php'
 driver.get(url)
 
+# 最大化窗口
+driver.maximize_window()
+
 #获取网页源码
 content = driver.page_source
-time.sleep(5)
+
+#等页面刷新
+time.sleep(10)
 #输入账号
 zhanghao = driver.find_element(By.XPATH,'//*[@id="loginname"]')
 zhanghao.send_keys('15551359775')
@@ -73,9 +78,30 @@ receive.click()
 #第一种办法，手动输入短信验证码
 time.sleep(10)
 code = input('请输入验证码:')
+code1 = driver.find_element(By.XPATH,'//*[@id="code_input0"]')
+code2 = driver.find_element(By.XPATH,'//*[@id="code_input1"]')
+code3 = driver.find_element(By.XPATH,'//*[@id="code_input2"]')
+code4 = driver.find_element(By.XPATH,'//*[@id="code_input3"]')
+code5 = driver.find_element(By.XPATH,'//*[@id="code_input4"]')
+code6 = driver.find_element(By.XPATH,'//*[@id="code_input5"]')
+code1.send_keys(code[0])
+time.sleep(1)
+code2.send_keys(code[1])
+time.sleep(1)
+code3.send_keys(code[2])
+time.sleep(1)
+code4.send_keys(code[3])
+time.sleep(1)
+code5.send_keys(code[4])
+time.sleep(1)
+code6.send_keys(code[5])
 
 
+#点击确认按钮
 
+time.sleep(5)
+confirm = driver.find_element(By.XPATH,'//*[@id="message_confirm"]')
+confirm.click()
 
 # 打印网页源码
 print(content,'我是网页源码')
