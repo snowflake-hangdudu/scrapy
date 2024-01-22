@@ -50,24 +50,10 @@ def mid2url(mid):
             # item['icon_desc'] = ''
             # item['hot_value'] = ''
     
-#获取账户信息
-userInfo_url = 'https://m.weibo.cn/api/container/getIndex?t=0&luicode=10000011&lfid=100103type%3D1%26q%3D%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6&type=uid&value=6239620007&containerid=1005056239620007'
-response = requests.get(userInfo_url)
-json_data = response.json()
-#基础统计量
-    #粉丝数量
-print(json_data['followers_count'])
-    #发稿数量
-
-    #阅读数量
-
-    #点赞数量
 
 
 
-
-
-#拿取前5页的内容
+#拿取前5页的内容，自定义页数
 for i in range(1, 6):
     if(i == 1):
         url = 'https://m.weibo.cn/api/container/getIndex?t=0&luicode=10000011&lfid=100103type%3D1%26q%3D%E6%B7%B1%E5%9C%B3%E5%A4%A7%E5%AD%A6&type=uid&value=6239620007&containerid=1076036239620007'
@@ -80,14 +66,22 @@ for i in range(1, 6):
     print(i)
     print(since_id)
     for card in json_data['data']['cards']:
+        # 类型
+        print('weibo')
+        # 标题
+        print( extract_text_from_html(card['mblog']['text']))
+        
         # 链接
         print(mid2url(card['scheme']))
         # 内容
         print( extract_text_from_html(card['mblog']['text']))
+
+        #icon_desc
+        print('')
+        #hot_value
+        print('')
+
+
             
-
-
-# with open('网页版请求深大用户.txt', 'w', encoding='utf-8') as f:
-#     f.write(data)
 
 

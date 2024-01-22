@@ -45,8 +45,13 @@ for i in range(1,6):
         for i in json_data['data']['cards']:
             if(i['card_type'] == 11):
                 continue
-            else:
+            elif(i['card_type'] == 9):
+                #内容
                 print(extract_text_from_html(i['mblog']['text']))
+                #标题
+                print(extract_text_from_html(i['mblog']['text']))
+                #链接
+                print(i['scheme'])
                 print('---------------------------------------------------------------\n')
     else:
         url = base_url + f'&page={i}'
@@ -54,6 +59,12 @@ for i in range(1,6):
         response = requests.get(url)
         json_data = response.json()
         for i in json_data['data']['cards']:
-            print(extract_text_from_html(i['card_group'][0]['mblog']['text']))
-            print('---------------------------------------------------------------\n')
+            if(i['card_type'] == 9):
+            #内容
+              print(extract_text_from_html(i['card_group'][0]['mblog']['text']))
+              #标题
+              print(extract_text_from_html(i['card_group'][0]['mblog']['text']))
+              # 链接
+              print(i['scheme'])
+              print('---------------------------------------------------------------\n')
             
